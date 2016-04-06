@@ -24,7 +24,7 @@ import java.util.Random;
  *    and communicates with UI thread via Activity.runOnUiThread
  * 4. DoWorkInSeparateThreadCallViewPostRunnable: performs background work on a separate thread
  *    and communicates with the UI thread via View.post
- * 5. DoWorkInSeparateThreadDownloadDataAsync: performs background work on a separate thread
+ * 5. DoWorkInSeparateThreadDownloadDataAsyncTask: performs background work on a separate thread
  *    and communicates with the UI via AsyncTask
  */
 public class MainActivity extends AppCompatActivity {
@@ -159,8 +159,9 @@ public class MainActivity extends AppCompatActivity {
     }
 
     /**
-     *
+     * Downloads files and communicates with UI thread via the call Activity.runOnUiThread()
      * See:
+     *  http://developer.android.com/reference/android/app/Activity.html#runOnUiThread(java.lang.Runnable)
      *  http://developer.android.com/guide/components/processes-and-threads.html#WorkerThreads
      */
     private class DownloadDataCallActivityRunOnUIThreadRunnable implements Runnable{
@@ -312,10 +313,8 @@ public class MainActivity extends AppCompatActivity {
                 }
 
                 float fractionCompleted = (float)(numFilesDownloaded + 1) / numFilesToDownload;
-                _mainActivity.setProgressBar(fractionCompleted);
+                publishProgress(fractionCompleted);
             }
-
-            _mainActivity.resetUIAndStateTrackingVariables();
 
             return numFilesDownloaded;
         }
